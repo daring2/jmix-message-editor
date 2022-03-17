@@ -1,0 +1,4 @@
+rootProject.name = 'jmix-message-editor-addon'
+
+include 'jmix-message-editor'
+include 'jmix-message-editor-starter'

@@ -1,0 +1,56 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'io.jmix.gradle:jmix-gradle-plugin:1.2.0'
+    }
+}
+
+group = 'ru.itsyn.jmix'
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'io.jmix'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://global.repo.jmix.io/repository/public' }
+    }
+
+    jmix {
+        bomVersion = '1.2.1'
+        projectId = 'msg'
+    }
+
+    group = rootProject.group
+    version = rootProject.version
+    sourceCompatibility = JavaVersion.VERSION_11
+
+    java {
+        withSourcesJar()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories.maven {
+            url = "https://opus-tech.gitlab.yandexcloud.net/api/v4/projects/3/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = 'Private-Token'
+                value = findProperty("yc.gitlabToken")
+            }
+            authentication { header(HttpHeaderAuthentication) }
+        }
+    }
+
+    // remove after https://youtrack.jetbrains.com/issue/IDEA-227215 is fixed
+    tasks.withType(GenerateModuleMetadata) {
+        enabled = false
+    }
+
+}

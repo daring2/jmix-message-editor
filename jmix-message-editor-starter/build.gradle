@@ -1,0 +1,14 @@
+archivesBaseName = 'jmix-message-editor-starter'
+
+jmix {
+    entitiesEnhancing.enabled = false
+}
+
+dependencies {
+    api project(':jmix-message-editor')
+
+    implementation 'io.jmix.core:jmix-core'
+    implementation 'io.jmix.data:jmix-data'
+
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+}
