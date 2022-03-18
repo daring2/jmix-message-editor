@@ -1,6 +1,9 @@
 package ru.itsyn.jmix.message_editor;
 
+import io.jmix.core.JmixModules;
+import io.jmix.core.Resources;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.core.impl.JmixMessageSource;
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.eclipselink.EclipselinkConfiguration;
 import io.jmix.ui.UiConfiguration;
@@ -20,6 +23,11 @@ import java.util.Collections;
 @JmixModule(dependsOn = {EclipselinkConfiguration.class, UiConfiguration.class})
 @PropertySource(name = "ru.itsyn.jmix.message_editor", value = "classpath:/ru/itsyn/jmix/message_editor/module.properties")
 public class JmixMessageEditorConfiguration {
+
+    @Bean
+    public JmixMessageSource jmixMessageSource(JmixModules modules, Resources resources) {
+        return new JmixMessageSource(modules, resources);
+    }
 
     @Bean("msg_JmixMessageEditorUiControllers")
     public UiControllersConfiguration screens(

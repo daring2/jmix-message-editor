@@ -1,11 +1,11 @@
 package ru.itsyn.jmix.message_editor.screen.message;
 
-import io.jmix.core.Messages;
 import io.jmix.ui.action.Action.ActionPerformedEvent;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
+import ru.itsyn.jmix.message_editor.message.MessageHelper;
 
 @Route("MessageEntity")
 @UiController("msg_MessageEntity.browse")
@@ -14,11 +14,11 @@ import ru.itsyn.jmix.message_editor.entity.MessageEntity;
 public class MessageEntityBrowser extends StandardLookup<MessageEntity> {
 
     @Autowired
-    protected Messages messages;
+    protected MessageHelper messageHelper;
 
     @Subscribe("table.apply")
     public void onTableApply(ActionPerformedEvent event) {
-        messages.clearCache();
+        messageHelper.reloadMessages();
     }
 
 }
