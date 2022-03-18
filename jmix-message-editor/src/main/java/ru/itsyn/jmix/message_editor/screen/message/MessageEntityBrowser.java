@@ -1,10 +1,10 @@
 package ru.itsyn.jmix.message_editor.screen.message;
 
+import io.jmix.core.Messages;
+import io.jmix.ui.action.Action.ActionPerformedEvent;
 import io.jmix.ui.navigation.Route;
-import io.jmix.ui.screen.LookupComponent;
-import io.jmix.ui.screen.StandardLookup;
-import io.jmix.ui.screen.UiController;
-import io.jmix.ui.screen.UiDescriptor;
+import io.jmix.ui.screen.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
 
 @Route("MessageEntity")
@@ -12,4 +12,13 @@ import ru.itsyn.jmix.message_editor.entity.MessageEntity;
 @UiDescriptor("message-entity-browser.xml")
 @LookupComponent("table")
 public class MessageEntityBrowser extends StandardLookup<MessageEntity> {
+
+    @Autowired
+    protected Messages messages;
+
+    @Subscribe("table.apply")
+    public void onTableApply(ActionPerformedEvent event) {
+        messages.clearCache();
+    }
+
 }

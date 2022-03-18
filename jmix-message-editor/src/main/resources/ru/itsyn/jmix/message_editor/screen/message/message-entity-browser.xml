@@ -35,7 +35,7 @@
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
                 <action id="remove" type="remove"/>
-<!--                <action id="apply" caption="msg://apply"/>-->
+                <action id="apply" caption="msg:///actions.Apply"/>
             </actions>
             <columns>
                 <column id="id" collapsed="true"/>
@@ -53,7 +53,7 @@
                 <button id="createBtn" action="table.create"/>
                 <button id="editBtn" action="table.edit"/>
                 <button id="removeBtn" action="table.remove"/>
-<!--                <button id="applyBtn" action="table.apply"/>-->
+                <button id="applyBtn" action="table.apply"/>
             </buttonsPanel>
         </table>
         <hbox id="lookupActions" spacing="true" visible="false">

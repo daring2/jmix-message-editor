@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://messageEntityEditor.caption"
+        focusComponent="form">
+    <data>
+        <instance id="editDc" class="ru.itsyn.jmix.message_editor.entity.MessageEntity">
+            <fetchPlan extends="_base"/>
+            <loader/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
+                icon="EDITOR_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="windowCommit" caption="msg:///actions.Save"
+                icon="EDITOR_SAVE"/>
+        <action id="windowClose"
+                caption="msg:///actions.Close"
+                icon="EDITOR_CANCEL"/>
+    </actions>
+    <dialogMode height="768" width="1024"/>
+    <layout expand="editActions">
+        <form id="form" dataContainer="editDc" width="100%">
+            <column width="100%">
+                <textField id="keyField" property="key" colspan="2"/>
+                <comboBox id="localeField" property="locale"/>
+                <textArea id="textField" property="text" rows="4" colspan="2"/>
+                <textArea id="defaultTextField" editable="false" rows="4" colspan="2"
+                          caption="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
+            </column>
+            <column width="100%">
+                <checkBox id="activeField" property="active"/>
+            </column>
+        </form>
+        <hbox id="editActions" spacing="true" margin="true" align="TOP_CENTER">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="windowCommit" action="windowCommit"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>
