@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://captionEntityEditor.caption"
+        focusComponent="form">
+    <data>
+        <instance id="editDc" class="ru.itsyn.jmix.message_editor.entity.CaptionEntity">
+            <loader/>
+        </instance>
+        <collection id="messagesDc" class="ru.itsyn.jmix.message_editor.entity.MessageEntity">
+            <fetchPlan extends="_base"/>
+            <loader id="messagesDl"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
+                icon="EDITOR_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="windowCommit" caption="msg:///actions.Save"
+                icon="EDITOR_SAVE"/>
+        <action id="windowClose"
+                caption="msg:///actions.Close"
+                icon="EDITOR_CANCEL"/>
+    </actions>
+    <dialogMode height="768" width="1024"/>
+    <layout expand="editActions" spacing="true">
+        <form id="form" dataContainer="editDc" width="100%">
+            <column width="100%">
+                <textField id="keyField" property="key"/>
+            </column>
+        </form>
+        <table id="messagesTable" dataContainer="messagesDc" editable="true"
+               height="300" width="100%" textSelectionEnabled="true"
+               caption="msg://captions">
+            <columns>
+                <column id="locale"/>
+                <column id="text" editable="true"/>
+                <column id="active" editable="true" width="100" align="CENTER"/>
+                <column id="defaultText" caption="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
+            </columns>
+        </table>
+        <hbox id="editActions" spacing="true">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="windowCommit" action="windowCommit"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

@@ -63,7 +63,7 @@ public class CaptionEntityHelper {
 
     public CaptionEntity createCaptionEntity(MetaClass metaClass) {
         return createCaptionEntity(
-                metaClass.getJavaClass().getName(),
+                getClassKey(metaClass.getJavaClass()),
                 messageTools.getEntityCaption(metaClass)
         );
     }
@@ -71,14 +71,14 @@ public class CaptionEntityHelper {
     public CaptionEntity createCaptionEntity(MetaProperty property) {
         var metaClass = property.getDomain();
         return createCaptionEntity(
-                metaClass.getJavaClass().getName() + "." + property.getName(),
+                getClassKey(metaClass.getJavaClass()) + "." + property.getName(),
                 messageTools.getPropertyCaption(property)
         );
     }
 
     public CaptionEntity createCaptionEntity(Enum<?> enumValue) {
         return createCaptionEntity(
-                enumValue.getDeclaringClass().getName() + "." + enumValue.name(),
+                getClassKey(enumValue.getDeclaringClass()) + "." + enumValue.name(),
                 messages.getMessage(enumValue)
         );
     }
@@ -88,6 +88,10 @@ public class CaptionEntityHelper {
         entity.setKey(key);
         entity.setText(text);
         return entity;
+    }
+
+    public String getClassKey(Class<?> javaClass) {
+        return javaClass.getPackageName() + "/" + javaClass.getSimpleName();
     }
 
 }
