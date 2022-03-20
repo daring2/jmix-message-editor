@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://messageEntityBrowser.caption"
+        caption="captionEntityBrowser.caption"
         focusComponent="table">
     <data readOnly="true">
-        <collection id="tableDc" class="ru.itsyn.jmix.message_editor.entity.MessageEntity">
-            <fetchPlan extends="_base"/>
-            <loader id="tableDl">
-                <query>select e from msg_MessageEntity e order by e.key</query>
-            </loader>
+        <collection id="tableDc" class="ru.itsyn.jmix.message_editor.entity.CaptionEntity">
+            <loader id="tableDl"/>
         </collection>
     </data>
     <facets>
@@ -27,32 +24,25 @@
     </actions>
     <dialogMode height="768" width="1024"/>
     <layout expand="table" spacing="true">
-        <filter id="filter" dataLoader="tableDl">
-            <properties include=".*"/>
-        </filter>
+        <hbox margin="true" spacing="true">
+            <label value="msg://entityComboBox.caption" align="MIDDLE_LEFT"/>
+            <comboBox id="entityComboBox" width="400"/>
+        </hbox>
         <table id="table" width="100%" dataContainer="tableDc">
             <actions>
-                <action id="create" type="create"/>
+                <action id="refresh" type="refresh"/>
                 <action id="edit" type="edit"/>
-                <action id="remove" type="remove"/>
                 <action id="apply" caption="msg:///actions.Apply"/>
             </actions>
             <columns>
                 <column id="id" collapsed="true"/>
                 <column id="key"/>
-                <column id="locale"/>
-                <column id="active"/>
                 <column id="text"/>
-                <column id="createdDate" collapsed="true"/>
-                <column id="createdBy" collapsed="true"/>
-                <column id="lastModifiedDate" collapsed="true"/>
-                <column id="lastModifiedBy" collapsed="true"/>
             </columns>
             <simplePagination/>
             <buttonsPanel id="buttonsPanel" alwaysVisible="true">
-                <button id="createBtn" action="table.create"/>
+                <button id="refreshBtn" action="table.refresh"/>
                 <button id="editBtn" action="table.edit"/>
-                <button id="removeBtn" action="table.remove"/>
                 <button id="applyBtn" action="table.apply"/>
             </buttonsPanel>
         </table>

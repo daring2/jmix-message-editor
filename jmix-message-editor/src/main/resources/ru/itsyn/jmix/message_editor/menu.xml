@@ -3,6 +3,7 @@
 
     <menu id="administration">
         <item screen="msg_MessageEntity.browse"/>
+        <item screen="msg_CaptionEntity.browse"/>
     </menu>
 
 </menu-config>
