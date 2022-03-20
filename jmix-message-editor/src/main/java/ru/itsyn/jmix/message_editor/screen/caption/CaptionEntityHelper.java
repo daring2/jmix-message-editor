@@ -69,9 +69,8 @@ public class CaptionEntityHelper {
     }
 
     public CaptionEntity createCaptionEntity(MetaProperty property) {
-        var metaClass = property.getDomain();
         return createCaptionEntity(
-                getClassKey(metaClass.getJavaClass()) + "." + property.getName(),
+                getClassKey(property.getDeclaringClass()) + "." + property.getName(),
                 messageTools.getPropertyCaption(property)
         );
     }

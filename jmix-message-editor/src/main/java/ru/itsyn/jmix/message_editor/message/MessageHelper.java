@@ -4,6 +4,7 @@ import io.jmix.core.DataManager;
 import io.jmix.core.impl.JmixMessageSource;
 import io.jmix.core.security.CurrentAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.StaticMessageSource;
@@ -64,10 +65,13 @@ public class MessageHelper {
     public String getDefaultText(MessageEntity entity) {
         if (isNotBlank(entity.getKey()) && isNotBlank(entity.getLocale())) {
             var locale = new Locale(entity.getLocale());
-            return jmixMessageSource.getMessage(entity.getKey(), null, locale);
-        } else {
-            return "";
+            try {
+                return jmixMessageSource.getMessage(entity.getKey(), null, locale);
+            } catch (NoSuchMessageException e) {
+                // ignore
+            }
         }
+        return "";
     }
 
 }
