@@ -30,7 +30,7 @@
         <filter id="filter" dataLoader="tableDl">
             <properties include=".*"/>
         </filter>
-        <table id="table" width="100%" dataContainer="tableDc">
+        <table id="table" width="100%" dataContainer="tableDc" multiselect="true">
             <actions>
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>

@@ -2,6 +2,7 @@ package ru.itsyn.jmix.message_editor.entity;
 
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.JmixId;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
 import java.util.UUID;
@@ -13,6 +14,7 @@ public class CaptionEntity {
     @JmixGeneratedValue
     private UUID id;
 
+    @InstanceName
     private String key;
 
     private String text;
