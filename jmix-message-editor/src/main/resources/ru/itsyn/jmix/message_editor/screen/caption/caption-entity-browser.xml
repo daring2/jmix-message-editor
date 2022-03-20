@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
-        caption="captionEntityBrowser.caption"
+        caption="msg://captionEntityBrowser.caption"
         focusComponent="table">
     <data readOnly="true">
         <collection id="tableDc" class="ru.itsyn.jmix.message_editor.entity.CaptionEntity">
@@ -8,7 +8,7 @@
         </collection>
     </data>
     <facets>
-        <dataLoadCoordinator auto="true"/>
+<!--        <dataLoadCoordinator auto="true"/>-->
         <screenSettings id="settingsFacet" auto="true"/>
         <presentations auto="true"/>
     </facets>
@@ -26,7 +26,7 @@
     <layout expand="table" spacing="true">
         <hbox margin="true" spacing="true">
             <label value="msg://entityComboBox.caption" align="MIDDLE_LEFT"/>
-            <comboBox id="entityComboBox" width="400"/>
+            <comboBox id="entityFilterField" width="400"/>
         </hbox>
         <table id="table" width="100%" dataContainer="tableDc">
             <actions>

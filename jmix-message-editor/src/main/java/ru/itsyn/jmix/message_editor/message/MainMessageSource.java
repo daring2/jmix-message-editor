@@ -47,4 +47,5 @@ public class MainMessageSource implements MessageSource {
     public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
         return parentMessageSource.getMessage(resolvable, locale);
     }
+
 }

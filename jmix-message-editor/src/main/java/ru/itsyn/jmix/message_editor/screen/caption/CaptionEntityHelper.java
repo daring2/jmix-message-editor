@@ -10,6 +10,7 @@ import io.jmix.ui.WindowInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.itsyn.jmix.message_editor.entity.CaptionEntity;
+import ru.itsyn.jmix.message_editor.message.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,10 @@ public class CaptionEntityHelper {
     protected Messages messages;
     @Autowired
     protected MessageTools messageTools;
+    @Autowired
+    protected MessageHelper messageHelper;
 
-    public List<CaptionEntity> buildCaptionEntities(Object object) {
+    public List<CaptionEntity> buildCaptions(Object object) {
         var entities = new ArrayList<CaptionEntity>();
         if (object instanceof MetaClass) {
             var metaClass = (MetaClass) object;
@@ -38,8 +41,22 @@ public class CaptionEntityHelper {
                 entities.add(createCaptionEntity(enumValue));
             }
         } else if (object instanceof WindowInfo) {
-            var windowInfo = (WindowInfo) object;
-            //TODO implement
+            entities.addAll(buildWindowCaptions((WindowInfo) object));
+        }
+        return entities;
+    }
+
+    public List<CaptionEntity> buildWindowCaptions(WindowInfo windowInfo) {
+        var entities = new ArrayList<CaptionEntity>();
+        var menuKey = "menu-config." + windowInfo.getId();
+        var menuCaption = messages.getMessage(menuKey);
+        if (!menuCaption.equals(menuKey))
+            entities.add(createCaptionEntity(menuKey, menuCaption));
+        var messageGroup = windowInfo.getControllerClass().getPackage().getName();
+        var keys = messageHelper.getMessageKeys(messageGroup + ".");
+        for (var key : keys) {
+            var text = messages.getMessage(key);
+            entities.add(createCaptionEntity(key, text));
         }
         return entities;
     }

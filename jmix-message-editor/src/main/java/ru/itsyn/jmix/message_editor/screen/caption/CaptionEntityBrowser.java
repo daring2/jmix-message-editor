@@ -4,10 +4,13 @@ import io.jmix.core.LoadContext;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
+import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.action.Action.ActionPerformedEvent;
 import io.jmix.ui.component.ComboBox;
+import io.jmix.ui.component.HasValue.ValueChangeEvent;
+import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ScreensHelper;
@@ -40,14 +43,16 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     @Autowired
     protected MessageHelper messageHelper;
     @Autowired
-    protected ComboBox entityComboBox;
+    protected CollectionLoader<CaptionEntity> tableDl;
+    @Autowired
+    protected ComboBox<Object> entityFilterField;
 
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
-        initEntityComboBox();
+        initEntityFilterField();
     }
 
-    protected void initEntityComboBox() {
+    protected void initEntityFilterField() {
         var options = new TreeMap<String, Object>();
         metadata.getClasses().forEach(mc ->
                 options.put(messageTools.getDetailedEntityCaption(mc), mc)
@@ -55,23 +60,38 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
         metadata.getClasses().stream()
                 .flatMap(mc -> mc.getOwnProperties().stream())
                 .filter(mp -> mp.getRange().isEnum())
-                .map(mp -> mp.getRange().asEnumeration())
-                .forEach(dt -> options.put(dt.getJavaClass().getSimpleName(), dt));
+                .forEach(mp -> {
+                    var enumType = mp.getRange().asEnumeration();
+                    options.put(getEnumCaption(mp), enumType);
+                });
         windowConfig.getWindows().forEach(wi ->
                 options.put(getScreenCaption(wi), wi)
         );
-        entityComboBox.setOptionsMap(options);
+        entityFilterField.setOptionsMap(options);
     }
 
     @Install(to = "tableDl", target = Target.DATA_LOADER)
     protected List<CaptionEntity> tableDlLoadDelegate(LoadContext<CaptionEntity> loadContext) {
-        var entity = entityComboBox.getValue();
-        return captionEntityHelper.buildCaptionEntities(entity);
+        var entity = entityFilterField.getValue();
+        return captionEntityHelper.buildCaptions(entity);
+    }
+
+    @Subscribe("entityFilterField")
+    public void onEntityFilterChange(ValueChangeEvent event) {
+        if (!event.isUserOriginated())
+            return;
+        tableDl.load();
     }
 
     @Subscribe("table.apply")
     public void onTableApply(ActionPerformedEvent event) {
         messageHelper.reloadMessages();
+    }
+
+    protected String getEnumCaption(MetaProperty property) {
+        var enumType = property.getRange().asEnumeration();
+        return messageTools.getPropertyCaption(property) +
+                " (" + enumType.getJavaClass().getSimpleName() + ")";
     }
 
     protected String getScreenCaption(WindowInfo windowInfo) {
