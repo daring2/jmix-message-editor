@@ -2,6 +2,7 @@ package ru.itsyn.jmix.message_editor.message;
 
 import io.jmix.core.DataManager;
 import io.jmix.core.impl.JmixMessageSource;
+import io.jmix.core.security.CurrentAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
@@ -9,7 +10,11 @@ import org.springframework.context.support.StaticMessageSource;
 import org.springframework.stereotype.Component;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
+import static org.springframework.context.support.MessageSourceUtils.getMergedProperties;
 
 @Component("msg_MessageHelper")
 public class MessageHelper {
@@ -20,6 +25,8 @@ public class MessageHelper {
     protected MainMessageSource mainMessageSource;
     @Autowired
     protected DataManager dataManager;
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
     @EventListener(ContextStartedEvent.class)
     public void init() {
@@ -43,6 +50,14 @@ public class MessageHelper {
             var locale = new Locale(entity.getLocale());
             messageSource.addMessage(entity.getKey(), locale, entity.getText());
         }
+    }
+
+    public List<String> getMessageKeys(String keyPrefix) {
+        var properties = getMergedProperties(jmixMessageSource, currentAuthentication.getLocale());
+        return properties.keySet().stream()
+                .filter(key -> (key instanceof String) && ((String) key).startsWith(keyPrefix))
+                .map(key -> (String) key)
+                .collect(Collectors.toList());
     }
 
 }

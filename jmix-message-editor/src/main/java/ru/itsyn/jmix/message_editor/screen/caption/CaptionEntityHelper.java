@@ -53,7 +53,7 @@ public class CaptionEntityHelper {
         if (!menuCaption.equals(menuKey))
             entities.add(createCaptionEntity(menuKey, menuCaption));
         var messageGroup = windowInfo.getControllerClass().getPackage().getName();
-        var keys = messageHelper.getMessageKeys(messageGroup + ".");
+        var keys = messageHelper.getMessageKeys(messageGroup + "/");
         for (var key : keys) {
             var text = messages.getMessage(key);
             entities.add(createCaptionEntity(key, text));
