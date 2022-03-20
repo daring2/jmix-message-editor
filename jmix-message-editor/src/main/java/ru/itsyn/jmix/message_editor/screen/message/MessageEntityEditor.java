@@ -9,11 +9,9 @@ import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
+import ru.itsyn.jmix.message_editor.message.MessageHelper;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Route(path = "MessageEntity/edit", parentPrefix = "MessageEntity")
 @UiController("msg_MessageEntity.edit")
@@ -25,6 +23,8 @@ public class MessageEntityEditor extends StandardEditor<MessageEntity> {
     protected Messages messages;
     @Autowired
     protected MessageTools messageTools;
+    @Autowired
+    protected MessageHelper messageHelper;
     @Autowired
     protected ComboBox<String> localeField;
     @Autowired
@@ -55,11 +55,7 @@ public class MessageEntityEditor extends StandardEditor<MessageEntity> {
 
     protected void updateDefaultText() {
         var entity = getEditedEntity();
-        var text = "";
-        if (isNotBlank(entity.getKey()) && isNotBlank(entity.getLocale())) {
-            var locale = new Locale(entity.getLocale());
-            text = messages.getMessage(entity.getKey(), locale);
-        }
+        var text = messageHelper.getDefaultText(entity);
         defaultTextField.setValue(text);
     }
 

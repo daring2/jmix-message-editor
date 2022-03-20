@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.springframework.context.support.MessageSourceUtils.getMergedProperties;
 
 @Component("msg_MessageHelper")
@@ -58,6 +59,15 @@ public class MessageHelper {
                 .filter(key -> (key instanceof String) && ((String) key).startsWith(keyPrefix))
                 .map(key -> (String) key)
                 .collect(Collectors.toList());
+    }
+
+    public String getDefaultText(MessageEntity entity) {
+        if (isNotBlank(entity.getKey()) && isNotBlank(entity.getLocale())) {
+            var locale = new Locale(entity.getLocale());
+            return jmixMessageSource.getMessage(entity.getKey(), null, locale);
+        } else {
+            return "";
+        }
     }
 
 }
