@@ -1,11 +1,9 @@
 package ru.itsyn.jmix.message_editor.screen.caption;
 
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
-import io.jmix.core.MessageTools;
-import io.jmix.core.Metadata;
+import io.jmix.core.*;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.Table;
+import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataContext.PreCommitEvent;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
@@ -32,9 +30,13 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
     @Autowired
     protected DataManager dataManager;
     @Autowired
+    protected EntityStates entityStates;
+    @Autowired
     protected MessageTools messageTools;
     @Autowired
     protected MessageHelper messageHelper;
+    @Autowired
+    protected CollectionLoader<MessageEntity> messagesDl;
 
     protected Map<String, String> locales = new LinkedHashMap<>();
 
@@ -96,10 +98,20 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
     @Subscribe(target = Target.DATA_CONTEXT)
     protected void onPreCommit(PreCommitEvent event) {
         event.getModifiedInstances().remove(getEditedEntity());
+        event.getModifiedInstances().forEach(obj -> {
+            var entity = (MessageEntity) obj;
+            if (isBlank(entity.getText()) && !entityStates.isNew(entity))
+                event.getRemovedInstances().add(entity);
+        });
         event.getModifiedInstances().removeIf(obj -> {
             var entity = (MessageEntity) obj;
             return isBlank(entity.getText());
         });
+    }
+
+    @Subscribe
+    public void onAfterCommitChanges(AfterCommitChangesEvent event) {
+        messagesDl.load();
     }
 
 }
