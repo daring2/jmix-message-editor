@@ -114,4 +114,11 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
         messagesDl.load();
     }
 
+    @Override
+    protected void preventUnsavedChanges(BeforeCloseEvent event) {
+        if (event.getCloseAction() == WINDOW_COMMIT_AND_CLOSE_ACTION)
+            return;
+        super.preventUnsavedChanges(event);
+    }
+
 }
