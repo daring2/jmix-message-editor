@@ -5,6 +5,7 @@ import io.jmix.core.MessageTools;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.action.Action.ActionPerformedEvent;
@@ -38,6 +39,10 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     protected WindowConfig windowConfig;
     @Autowired
     protected ScreensHelper screensHelper;
+    @Autowired
+    protected Notifications notifications;
+    @Autowired
+    protected MessageBundle messageBundle;
     @Autowired
     protected CaptionEntityHelper captionEntityHelper;
     @Autowired
@@ -86,6 +91,9 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     @Subscribe("table.apply")
     public void onTableApply(ActionPerformedEvent event) {
         messageHelper.reloadMessages();
+        notifications.create()
+                .withCaption(messageBundle.getMessage("changesApplied"))
+                .show();
     }
 
     protected String getEnumCaption(MetaProperty property) {
