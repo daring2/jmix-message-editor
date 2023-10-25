@@ -3,8 +3,10 @@ package ru.itsyn.jmix.message_editor.message;
 import io.jmix.core.DataManager;
 import io.jmix.core.impl.JmixMessageSource;
 import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.core.security.SystemAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.StaticMessageSource;
@@ -28,11 +30,13 @@ public class MessageHelper {
     @Autowired
     protected DataManager dataManager;
     @Autowired
+    protected SystemAuthenticator systemAuthenticator;
+    @Autowired
     protected CurrentAuthentication currentAuthentication;
 
-    @EventListener(ContextStartedEvent.class)
+    @EventListener(ContextRefreshedEvent.class)
     public void init() {
-        reloadMessages();
+        systemAuthenticator.runWithSystem(this::reloadMessages);
     }
 
     public void reloadMessages() {
@@ -72,6 +76,10 @@ public class MessageHelper {
             }
         }
         return "";
+    }
+
+    public Locale getCurrentLocale() {
+        return currentAuthentication.getLocale();
     }
 
 }
