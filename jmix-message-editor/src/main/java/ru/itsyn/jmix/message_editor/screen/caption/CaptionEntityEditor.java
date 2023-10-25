@@ -3,6 +3,7 @@ package ru.itsyn.jmix.message_editor.screen.caption;
 import io.jmix.core.*;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.Table;
+import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataContext.PreCommitEvent;
 import io.jmix.ui.navigation.Route;
@@ -17,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Route(path = "CaptionEntity/edit", parentPrefix = "CaptionEntity")
@@ -35,6 +37,8 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
     protected MessageTools messageTools;
     @Autowired
     protected MessageHelper messageHelper;
+    @Autowired
+    protected CollectionContainer<MessageEntity> messagesDc;
     @Autowired
     protected CollectionLoader<MessageEntity> messagesDl;
 
@@ -112,6 +116,19 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
     @Subscribe
     public void onAfterCommitChanges(AfterCommitChangesEvent event) {
         messagesDl.load();
+        updateCaptionEntityAfterCommit();
+    }
+
+    protected void updateCaptionEntityAfterCommit() {
+        var currentLocale = messageHelper.getCurrentLocale();
+        for (var item : messagesDc.getItems()) {
+            var isCurrent = isTrue(item.getActive()) &&
+                    currentLocale.getLanguage().equals(item.getLocale());
+            if (isCurrent) {
+                getEditedEntity().setText(item.getText());
+                break;
+            }
+        }
     }
 
     @Override

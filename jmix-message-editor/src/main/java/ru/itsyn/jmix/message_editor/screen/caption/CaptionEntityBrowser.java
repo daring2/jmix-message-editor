@@ -91,6 +91,7 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     @Subscribe("table.apply")
     public void onTableApply(ActionPerformedEvent event) {
         messageHelper.reloadMessages();
+        tableDl.load();
         notifications.create()
                 .withCaption(messageBundle.getMessage("changesApplied"))
                 .show();
