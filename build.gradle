@@ -1,5 +1,5 @@
 plugins {
-    id 'io.jmix' version '1.5.0' apply false
+    id 'io.jmix' version '1.5.4' apply false
 }
 
 group = 'ru.itsyn.jmix'
@@ -15,13 +15,19 @@ subprojects {
     }
 
     jmix {
-        bomVersion = '1.5.0'
+        bomVersion = '1.5.4'
         projectId = 'msg'
     }
 
     group = rootProject.group
     version = rootProject.version
+
     sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
     java {
         withSourcesJar()

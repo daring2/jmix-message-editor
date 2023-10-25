@@ -10,7 +10,8 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.mockito:mockito-core:5.2.0'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }
