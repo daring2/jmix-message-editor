@@ -1,6 +1,7 @@
 package ru.itsyn.jmix.message_editor.message;
 
 import io.jmix.core.impl.JmixMessageSource;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
@@ -8,7 +9,6 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.Locale;
 
 @Primary
