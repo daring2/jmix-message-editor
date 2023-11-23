@@ -1,5 +1,5 @@
 plugins {
-    id 'io.jmix' version '1.5.4' apply false
+    id 'io.jmix' version '2.1.1' apply false
 }
 
 group = 'ru.itsyn.jmix'
@@ -10,24 +10,20 @@ subprojects {
     apply plugin: 'io.jmix'
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url 'https://global.repo.jmix.io/repository/public' }
     }
 
     jmix {
-        bomVersion = '1.5.4'
+        bomVersion = '2.1.1'
         projectId = 'msg'
     }
 
     group = rootProject.group
     version = rootProject.version
-
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
+    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
 
     java {
         withSourcesJar()
