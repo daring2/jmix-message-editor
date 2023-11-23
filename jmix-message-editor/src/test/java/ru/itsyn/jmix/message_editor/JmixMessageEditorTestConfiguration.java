@@ -25,4 +25,5 @@ public class JmixMessageEditorTestConfiguration {
                 .setType(EmbeddedDatabaseType.HSQL)
                 .build();
     }
+
 }

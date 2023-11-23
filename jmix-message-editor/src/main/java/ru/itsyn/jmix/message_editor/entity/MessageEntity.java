@@ -5,13 +5,13 @@ import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,13 +20,13 @@ import java.util.UUID;
 @Entity(name = "msg_MessageEntity")
 public class MessageEntity {
 
+    @Id
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
-    @Id
     private UUID id;
 
-    @Column(name = "VERSION", nullable = false)
     @Version
+    @Column(name = "VERSION", nullable = false)
     private Integer version;
 
     @CreatedBy
