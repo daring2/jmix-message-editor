@@ -1,10 +1,10 @@
 package ru.itsyn.jmix.autoconfigure.message_editor;
 
-import ru.itsyn.jmix.message_editor.JmixMessageEditorConfiguration;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Import;
+import ru.itsyn.jmix.message_editor.JmixMessageEditorConfiguration;
 
-@Configuration
+@AutoConfiguration
 @Import({JmixMessageEditorConfiguration.class})
 public class JmixMessageEditorAutoConfiguration {
 }
