@@ -4,11 +4,11 @@
     <moduleSettings>
       <entry key="jmix-message-editor-addon.jmix-message-editor.main">
         <ModuleSettings>
-          <option name="dataStoreOptions">
+          <option name="dataStoreOptionsV2">
             <map>
               <entry key="main">
                 <value>
-                  <DataStoreSettings />
+                  <DataStoreSettingsV2 />
                 </value>
               </entry>
             </map>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://messageEntityBrowser.caption"
-        focusComponent="table">
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://messageEntityBrowser.caption"
+      focusComponent="table">
     <data readOnly="true">
         <collection id="tableDc" class="ru.itsyn.jmix.message_editor.entity.MessageEntity">
             <fetchPlan extends="_base"/>
@@ -12,53 +12,56 @@
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
-        <screenSettings id="settingsFacet" auto="true"/>
-        <presentations auto="true"/>
+        <urlQueryParameters>
+            <pagination component="pagination"/>
+            <genericFilter component="filter"/>
+        </urlQueryParameters>
+        <settings auto="true"/>
+        <!--        <presentations auto="true"/>-->
     </facets>
     <actions>
-        <action id="lookupSelectAction"
-                caption="msg:///actions.Select"
-                icon="LOOKUP_OK"
-                primary="true"
-                shortcut="${COMMIT_SHORTCUT}"/>
-        <action id="lookupCancelAction"
-                caption="msg:///actions.Cancel"
-                icon="LOOKUP_CANCEL"/>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
     </actions>
-    <dialogMode height="768" width="1024"/>
+
     <layout expand="table" spacing="true">
-        <filter id="filter" dataLoader="tableDl">
-            <properties include=".*"/>
-        </filter>
-        <table id="table" width="100%" dataContainer="tableDc" multiselect="true">
+        <genericFilter id="filter" dataLoader="tableDl" summaryText="msg://filter">
+            <responsiveSteps>
+                <responsiveStep minWidth="0px" columns="1"/>
+                <responsiveStep minWidth="800px" columns="2"/>
+                <responsiveStep minWidth="1200px" columns="3"/>
+            </responsiveSteps>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createBtn" action="table.create"/>
+            <button id="editBtn" action="table.edit"/>
+            <button id="removeBtn" action="table.remove"/>
+            <button id="applyBtn" action="table.apply"/>
+            <simplePagination id="pagination" dataLoader="tableDl"/>
+        </hbox>
+        <dataGrid id="table" width="100%" minHeight="400px" dataContainer="tableDc"
+                  columnReorderingAllowed="true">
             <actions>
-                <action id="create" type="create"/>
-                <action id="edit" type="edit"/>
-                <action id="remove" type="remove"/>
-                <action id="apply" caption="msg:///actions.Apply"/>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="remove" type="list_remove"/>
+                <action id="apply" text="msg://apply"/>
             </actions>
             <columns>
-                <column id="id" collapsed="true"/>
-                <column id="key"/>
-                <column id="locale"/>
-                <column id="active"/>
-                <column id="text"/>
-                <column id="createdDate" collapsed="true"/>
-                <column id="createdBy" collapsed="true"/>
-                <column id="lastModifiedDate" collapsed="true"/>
-                <column id="lastModifiedBy" collapsed="true"/>
+<!--                <column property="id" collapsed="true"/>-->
+                <column property="key"/>
+                <column property="locale"/>
+                <column property="active"/>
+                <column property="text"/>
+<!--                <column property="createdDate" collapsed="true"/>-->
+<!--                <column property="createdBy" collapsed="true"/>-->
+<!--                <column property="lastModifiedDate" collapsed="true"/>-->
+<!--                <column property="lastModifiedBy" collapsed="true"/>-->
             </columns>
-            <simplePagination/>
-            <buttonsPanel id="buttonsPanel" alwaysVisible="true">
-                <button id="createBtn" action="table.create"/>
-                <button id="editBtn" action="table.edit"/>
-                <button id="removeBtn" action="table.remove"/>
-                <button id="applyBtn" action="table.apply"/>
-            </buttonsPanel>
-        </table>
-        <hbox id="lookupActions" spacing="true" visible="false">
-            <button action="lookupSelectAction"/>
-            <button action="lookupCancelAction"/>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectBtn" action="selectAction"/>
+            <button id="discardBtn" action="discardAction"/>
         </hbox>
     </layout>
-</window>
+</view>

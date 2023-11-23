@@ -2,8 +2,8 @@
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
     <menu id="administration">
-        <item view="msg_MessageEntity.browse"/>
-        <item view="msg_CaptionEntity.browse"/>
+        <item view="msg_MessageEntity.list"/>
+<!--        <item view="msg_CaptionEntity.list"/>-->
     </menu>
 
 </menu-config>
