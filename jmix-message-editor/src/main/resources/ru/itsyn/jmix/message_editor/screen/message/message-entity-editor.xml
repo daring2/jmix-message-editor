@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://messageEntityEditor.caption"
-        focusComponent="form">
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://messageEntityEditor.caption"
+      focusComponent="form">
     <data>
         <instance id="editDc" class="ru.itsyn.jmix.message_editor.entity.MessageEntity">
             <fetchPlan extends="_base"/>
@@ -10,37 +10,33 @@
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
-        <screenSettings id="settingsFacet" auto="true"/>
+        <settings id="settingsFacet" auto="true"/>
     </facets>
     <actions>
-        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
-                icon="EDITOR_OK"
-                primary="true"
-                shortcut="${COMMIT_SHORTCUT}"/>
-        <action id="windowCommit" caption="msg:///actions.Save"
-                icon="EDITOR_SAVE"/>
-        <action id="windowClose"
-                caption="msg:///actions.Close"
-                icon="EDITOR_CANCEL"/>
+        <action id="saveAndCloseAction" type="detail_saveClose"/>
+        <action id="saveAction" type="detail_save"/>
+        <action id="closeAction" type="detail_close" text="msg:///actions.Close"/>
     </actions>
-    <dialogMode height="768" width="1024"/>
     <layout expand="editActions" spacing="true">
-        <form id="form" dataContainer="editDc" width="100%">
-            <column width="100%">
-                <textField id="keyField" property="key" colspan="2"/>
-                <comboBox id="localeField" property="locale"/>
-                <textArea id="textField" property="text" rows="4" colspan="2"/>
-                <textArea id="defaultTextField" editable="false" rows="4" colspan="2"
-                          caption="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
-            </column>
-            <column width="100%">
-                <checkBox id="activeField" property="active"/>
-            </column>
-        </form>
-        <hbox id="editActions" spacing="true">
-            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
-            <button id="windowCommit" action="windowCommit"/>
-            <button id="closeBtn" action="windowClose"/>
+        <formLayout id="form" dataContainer="editDc" width="100%"
+                    classNames="form-layout" labelsPosition="ASIDE">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="50em" columns="2"/>
+            </responsiveSteps>
+            <formItem><textField id="keyField" property="key" colspan="2"/></formItem>
+            <formItem><checkbox id="activeField" property="active"/></formItem>
+            <formItem><comboBox id="localeField" property="locale"/></formItem>
+            <formItem colspan="2"><textArea id="textField" property="text" height="5em"/></formItem>
+            <formItem colspan="2">
+                <textArea id="defaultTextField" height="5em"  readOnly="true"
+                          label="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
+            </formItem>
+        </formLayout>
+        <hbox id="editActions" spacing="true" margin="true" alignSelf="CENTER">
+            <button id="saveAndCloseBtn" action="saveAndCloseAction"/>
+            <button id="saveBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
         </hbox>
     </layout>
-</window>
+</view>

@@ -1,23 +1,24 @@
 package ru.itsyn.jmix.message_editor.screen.message;
 
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.Route;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
-import io.jmix.ui.component.ComboBox;
-import io.jmix.ui.component.TextArea;
-import io.jmix.ui.model.InstanceContainer.ItemPropertyChangeEvent;
-import io.jmix.ui.navigation.Route;
-import io.jmix.ui.screen.*;
+import io.jmix.flowui.model.InstanceContainer.ItemPropertyChangeEvent;
+import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
 import ru.itsyn.jmix.message_editor.message.MessageHelper;
 
 import java.util.LinkedHashMap;
 
-@Route(path = "MessageEntity/edit", parentPrefix = "MessageEntity")
-@UiController("msg_MessageEntity.edit")
-@UiDescriptor("message-entity-editor.xml")
+@Route(value = "MessageEntity/:id", layout = DefaultMainViewParent.class)
+@ViewController("msg_MessageEntity.detail")
+@ViewDescriptor("message-entity-editor.xml")
 @EditedEntityContainer("editDc")
-public class MessageEntityEditor extends StandardEditor<MessageEntity> {
+@DialogMode(width = "1024px", height = "768px", resizable = true)
+public class MessageEntityEditor extends StandardDetailView<MessageEntity> {
 
     @Autowired
     protected Messages messages;
@@ -25,10 +26,10 @@ public class MessageEntityEditor extends StandardEditor<MessageEntity> {
     protected MessageTools messageTools;
     @Autowired
     protected MessageHelper messageHelper;
-    @Autowired
+    @ViewComponent
     protected ComboBox<String> localeField;
-    @Autowired
-    protected TextArea<String> defaultTextField;
+    @ViewComponent
+    protected TextArea defaultTextField;
 
     @Subscribe
     public void onInit(InitEvent event) {
@@ -38,9 +39,10 @@ public class MessageEntityEditor extends StandardEditor<MessageEntity> {
     protected void initLocaleField() {
         var options = new LinkedHashMap<String, String>();
         for (var entry : messageTools.getAvailableLocalesMap().entrySet()) {
-            options.put(entry.getKey(), entry.getValue().getLanguage());
+            options.put(entry.getValue().getLanguage(), entry.getKey());
         }
-        localeField.setOptionsMap(options);
+        localeField.setItems(options.keySet());
+        localeField.setItemLabelGenerator(options::get);
     }
 
     @Subscribe
