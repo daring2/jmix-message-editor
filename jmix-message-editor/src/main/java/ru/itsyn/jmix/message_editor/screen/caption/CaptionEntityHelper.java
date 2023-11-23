@@ -6,7 +6,7 @@ import io.jmix.core.Metadata;
 import io.jmix.core.metamodel.datatype.Enumeration;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.WindowInfo;
+import io.jmix.flowui.view.ViewInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.itsyn.jmix.message_editor.entity.CaptionEntity;
@@ -40,19 +40,19 @@ public class CaptionEntityHelper {
             for (var enumValue : enumType.getValues()) {
                 entities.add(createCaptionEntity(enumValue));
             }
-        } else if (object instanceof WindowInfo) {
-            entities.addAll(buildWindowCaptions((WindowInfo) object));
+        } else if (object instanceof ViewInfo) {
+            entities.addAll(buildWindowCaptions((ViewInfo) object));
         }
         return entities;
     }
 
-    public List<CaptionEntity> buildWindowCaptions(WindowInfo windowInfo) {
+    public List<CaptionEntity> buildWindowCaptions(ViewInfo viewInfo) {
         var entities = new ArrayList<CaptionEntity>();
-        var menuKey = "menu-config." + windowInfo.getId();
+        var menuKey = "menu-config." + viewInfo.getId();
         var menuCaption = messages.getMessage(menuKey);
         if (!menuCaption.equals(menuKey))
             entities.add(createCaptionEntity(menuKey, menuCaption));
-        var messageGroup = windowInfo.getControllerClass().getPackage().getName();
+        var messageGroup = viewInfo.getControllerClass().getPackage().getName();
         var keys = messageHelper.getMessageKeys(messageGroup + "/");
         for (var key : keys) {
             var text = messages.getMessage(key);

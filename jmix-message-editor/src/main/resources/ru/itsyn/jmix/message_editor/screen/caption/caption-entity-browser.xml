@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://captionEntityBrowser.caption"
-        focusComponent="table">
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://captionEntityBrowser.caption"
+      focusComponent="table">
     <data readOnly="true">
         <collection id="tableDc" class="ru.itsyn.jmix.message_editor.entity.CaptionEntity">
             <loader id="tableDl"/>
@@ -9,46 +9,44 @@
     </data>
     <facets>
 <!--        <dataLoadCoordinator auto="true"/>-->
-        <screenSettings id="settingsFacet" auto="true"/>
-        <presentations auto="true"/>
+        <urlQueryParameters>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+        <settings auto="true"/>
+<!--        <presentations auto="true"/>-->
     </facets>
     <actions>
-        <action id="lookupSelectAction"
-                caption="msg:///actions.Select"
-                icon="LOOKUP_OK"
-                primary="true"
-                shortcut="${COMMIT_SHORTCUT}"/>
-        <action id="lookupCancelAction"
-                caption="msg:///actions.Cancel"
-                icon="LOOKUP_CANCEL"/>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
     </actions>
-    <dialogMode height="768" width="1024"/>
+
     <layout expand="table" spacing="true">
-        <hbox margin="true" spacing="true">
-            <label value="msg://entityComboBox.caption" align="MIDDLE_LEFT"/>
-            <comboBox id="entityFilterField" width="400"/>
+        <hbox margin="true" spacing="true" alignItems="CENTER">
+            <label text="msg://entityComboBox.caption" setFor="entityFilterField"/>
+            <comboBox id="entityFilterField" width="400px"/>
         </hbox>
-        <table id="table" width="100%" dataContainer="tableDc">
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="refreshBtn" action="table.refresh"/>
+            <button id="editBtn" action="table.edit"/>
+            <button id="applyBtn" action="table.apply"/>
+            <simplePagination id="pagination" dataLoader="tableDl"/>
+        </hbox>
+        <dataGrid id="table" width="100%" minHeight="400px" dataContainer="tableDc"
+                  columnReorderingAllowed="true">
             <actions>
-                <action id="refresh" type="refresh"/>
-                <action id="edit" type="edit"/>
-                <action id="apply" caption="msg:///actions.Apply"/>
+                <action id="refresh" type="list_refresh"/>
+                <action id="edit" type="list_edit"/>
+                <action id="apply" text="msg://apply"/>
             </actions>
             <columns>
-                <column id="id" collapsed="true"/>
-                <column id="key"/>
-                <column id="text"/>
+<!--                <column property="id" collapsed="true"/>-->
+                <column property="key"/>
+                <column property="text"/>
             </columns>
-            <simplePagination/>
-            <buttonsPanel id="buttonsPanel" alwaysVisible="true">
-                <button id="refreshBtn" action="table.refresh"/>
-                <button id="editBtn" action="table.edit"/>
-                <button id="applyBtn" action="table.apply"/>
-            </buttonsPanel>
-        </table>
-        <hbox id="lookupActions" spacing="true" visible="false">
-            <button action="lookupSelectAction"/>
-            <button action="lookupCancelAction"/>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectBtn" action="selectAction"/>
+            <button id="discardBtn" action="discardAction"/>
         </hbox>
     </layout>
-</window>
+</view>

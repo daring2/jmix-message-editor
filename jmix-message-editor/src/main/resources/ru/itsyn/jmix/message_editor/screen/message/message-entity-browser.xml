@@ -17,7 +17,7 @@
             <genericFilter component="filter"/>
         </urlQueryParameters>
         <settings auto="true"/>
-        <!--        <presentations auto="true"/>-->
+<!--        <presentations auto="true"/>-->
     </facets>
     <actions>
         <action id="selectAction" type="lookup_select"/>

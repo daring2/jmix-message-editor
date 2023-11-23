@@ -1,33 +1,34 @@
 package ru.itsyn.jmix.message_editor.screen.caption;
 
+import com.vaadin.flow.component.HasValue.ValueChangeEvent;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.router.Route;
 import io.jmix.core.LoadContext;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.Notifications;
-import io.jmix.ui.WindowConfig;
-import io.jmix.ui.WindowInfo;
-import io.jmix.ui.action.Action.ActionPerformedEvent;
-import io.jmix.ui.component.ComboBox;
-import io.jmix.ui.component.HasValue.ValueChangeEvent;
-import io.jmix.ui.model.CollectionLoader;
-import io.jmix.ui.navigation.Route;
-import io.jmix.ui.screen.*;
-import io.jmix.ui.sys.ScreensHelper;
+import io.jmix.flowui.Notifications;
+import io.jmix.flowui.kit.action.ActionPerformedEvent;
+import io.jmix.flowui.model.CollectionLoader;
+import io.jmix.flowui.sys.ViewSupport;
+import io.jmix.flowui.view.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.CaptionEntity;
 import ru.itsyn.jmix.message_editor.message.MessageHelper;
 
-import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Route("CaptionEntity")
-@UiController("msg_CaptionEntity.browse")
-@UiDescriptor("caption-entity-browser.xml")
+@Route(value = "CaptionEntity", layout = DefaultMainViewParent.class)
+@ViewController("msg_CaptionEntity.list")
+@ViewDescriptor("caption-entity-browser.xml")
 @LookupComponent("table")
-public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
+@DialogMode(width = "1024px", height = "768px", resizable = true)
+public class CaptionEntityBrowser extends StandardListView<CaptionEntity> {
 
     @Autowired
     protected Metadata metadata;
@@ -36,9 +37,9 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     @Autowired
     protected MessageTools messageTools;
     @Autowired
-    protected WindowConfig windowConfig;
+    protected ViewRegistry viewRegistry;
     @Autowired
-    protected ScreensHelper screensHelper;
+    protected ViewSupport viewSupport;
     @Autowired
     protected Notifications notifications;
     @Autowired
@@ -47,9 +48,10 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     protected CaptionEntityHelper captionEntityHelper;
     @Autowired
     protected MessageHelper messageHelper;
-    @Autowired
+
+    @ViewComponent
     protected CollectionLoader<CaptionEntity> tableDl;
-    @Autowired
+    @ViewComponent
     protected ComboBox<Object> entityFilterField;
 
     @Subscribe
@@ -58,21 +60,26 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     }
 
     protected void initEntityFilterField() {
-        var options = new TreeMap<String, Object>();
-        metadata.getClasses().forEach(mc ->
-                options.put(messageTools.getDetailedEntityCaption(mc), mc)
-        );
+        var options = new HashMap<Object, String>();
+        metadata.getClasses().forEach(mc -> {
+            options.put(mc, messageTools.getDetailedEntityCaption(mc));
+        });
         metadata.getClasses().stream()
                 .flatMap(mc -> mc.getOwnProperties().stream())
                 .filter(mp -> mp.getRange().isEnum())
                 .forEach(mp -> {
                     var enumType = mp.getRange().asEnumeration();
-                    options.put(getEnumCaption(mp), enumType);
+                    options.put(enumType, getEnumCaption(mp));
                 });
-        windowConfig.getWindows().forEach(wi ->
-                options.put(getScreenCaption(wi), wi)
+        viewRegistry.getViewInfos().forEach(viewInfo ->
+                options.put(viewInfo, getScreenCaption(viewInfo))
         );
-        entityFilterField.setOptionsMap(options);
+        var items = options.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        entityFilterField.setItems(items);
+        entityFilterField.setItemLabelGenerator(options::get);
     }
 
     @Install(to = "tableDl", target = Target.DATA_LOADER)
@@ -83,7 +90,7 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
 
     @Subscribe("entityFilterField")
     public void onEntityFilterChange(ValueChangeEvent event) {
-        if (!event.isUserOriginated())
+        if (!event.isFromClient())
             return;
         tableDl.load();
     }
@@ -92,9 +99,7 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
     public void onTableApply(ActionPerformedEvent event) {
         messageHelper.reloadMessages();
         tableDl.load();
-        notifications.create()
-                .withCaption(messageBundle.getMessage("changesApplied"))
-                .show();
+        notifications.show(messageBundle.getMessage("changesApplied"));
     }
 
     protected String getEnumCaption(MetaProperty property) {
@@ -103,12 +108,11 @@ public class CaptionEntityBrowser extends StandardLookup<CaptionEntity> {
                 " (" + enumType.getJavaClass().getSimpleName() + ")";
     }
 
-    protected String getScreenCaption(WindowInfo windowInfo) {
-        try {
-            return screensHelper.getDetailedScreenCaption(windowInfo);
-        } catch (FileNotFoundException e) {
-            return windowInfo.getId();
-        }
+    protected String getScreenCaption(ViewInfo viewInfo) {
+        var caption = viewSupport.getLocalizedTitle(viewInfo);
+        if (StringUtils.isBlank(caption))
+            return viewInfo.getId();
+        return caption + " (" + viewInfo.getId() + ")";
     }
 
 }
