@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<menu-config xmlns="http://jmix.io/schema/ui/menu">
+<menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
     <menu id="administration">
-        <item screen="msg_MessageEntity.browse"/>
-        <item screen="msg_CaptionEntity.browse"/>
+        <item view="msg_MessageEntity.browse"/>
+        <item view="msg_CaptionEntity.browse"/>
     </menu>
 
 </menu-config>
