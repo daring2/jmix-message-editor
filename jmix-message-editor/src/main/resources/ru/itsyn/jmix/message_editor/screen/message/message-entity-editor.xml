@@ -27,10 +27,9 @@
             <formItem><textField id="keyField" property="key" colspan="2"/></formItem>
             <formItem><checkbox id="activeField" property="active"/></formItem>
             <formItem><comboBox id="localeField" property="locale"/></formItem>
-            <formItem colspan="2"><textArea id="textField" property="text" height="5em"/></formItem>
-            <formItem colspan="2">
-                <textArea id="defaultTextField" height="5em"  readOnly="true"
-                          label="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
+            <formItem colspan="2"><textArea id="textField" property="text" height="8em"/></formItem>
+            <formItem colspan="2" label="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText">
+                <textArea id="defaultTextField" height="8em" readOnly="true"/>
             </formItem>
         </formLayout>
         <hbox id="editActions" spacing="true" margin="true" alignSelf="CENTER">
