@@ -1,6 +1,6 @@
 package ru.itsyn.jmix.message_editor.screen.caption;
 
-import com.vaadin.flow.component.HasValue.ValueChangeEvent;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.LoadContext;
@@ -83,13 +83,13 @@ public class CaptionEntityBrowser extends StandardListView<CaptionEntity> {
     }
 
     @Install(to = "tableDl", target = Target.DATA_LOADER)
-    protected List<CaptionEntity> tableDlLoadDelegate(LoadContext<CaptionEntity> loadContext) {
+    protected List<CaptionEntity> loadData(LoadContext<CaptionEntity> loadContext) {
         var entity = entityFilterField.getValue();
         return captionEntityHelper.buildCaptions(entity);
     }
 
     @Subscribe("entityFilterField")
-    public void onEntityFilterChange(ValueChangeEvent event) {
+    public void onEntityFilterChange(ComponentValueChangeEvent<?, ?> event) {
         if (!event.isFromClient())
             return;
         tableDl.load();
