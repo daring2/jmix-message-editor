@@ -94,7 +94,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
         return new TextRenderer<>(entity -> locales.get(entity.getLocale()));
     }
 
-    @Supply(to = "messagesTable.locale", subject = "renderer")
+    @Supply(to = "messagesTable.defaultText", subject = "renderer")
     protected Renderer<MessageEntity> localeDefaultTextRenderer() {
         return new TextRenderer<>(messageHelper::getDefaultText);
     }
