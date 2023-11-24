@@ -30,8 +30,8 @@
                   editorBuffered="false">
             <columns>
                 <column property="locale"/>
-                <column property="text" editable="true"/>
-                <column property="active" editable="true" width="100px" textAlign="CENTER"/>
+                <column property="text"/>
+                <column property="active" textAlign="CENTER"/>
                 <column key="defaultText" header="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
             </columns>
         </dataGrid>
