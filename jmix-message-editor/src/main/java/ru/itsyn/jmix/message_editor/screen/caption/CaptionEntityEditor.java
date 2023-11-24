@@ -22,10 +22,7 @@ import ru.itsyn.jmix.message_editor.entity.CaptionEntity;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
 import ru.itsyn.jmix.message_editor.message.MessageHelper;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -60,6 +57,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
     protected DataGrid<MessageEntity> messagesTable;
 
     protected Map<String, String> locales = new LinkedHashMap<>();
+    protected Map<String, Component> fields = new HashMap<>();
 
     @Subscribe
     public void onInit(InitEvent event) {
@@ -174,11 +172,17 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
             MessageEntity entity,
             String property
     ) {
+        var fieldKey = entity.getId() + "." + property;
+        var field = (T) fields.get(fieldKey);
+        if (field != null) {
+            return field;
+        }
         var container = dataComponents.createInstanceContainer(MessageEntity.class);
         container.setItem(entity);
         var valueSource = new ContainerValueSource<>(container, property);
-        var field = uiComponents.create(componentType);
+        field = uiComponents.create(componentType);
         ((SupportsValueSource<Object>) field).setValueSource(valueSource);
+        fields.put(fieldKey, field);
         return field;
     }
 
