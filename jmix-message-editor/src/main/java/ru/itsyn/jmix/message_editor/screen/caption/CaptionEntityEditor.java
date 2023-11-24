@@ -12,6 +12,7 @@ import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.data.SupportsValueSource;
 import io.jmix.flowui.data.value.ContainerValueSource;
+import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.model.DataComponents;
@@ -50,8 +51,6 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
     protected UiComponents uiComponents;
 
     @ViewComponent
-    protected DataContext dataContext;
-    @ViewComponent
     protected CollectionContainer<MessageEntity> messagesDc;
     @ViewComponent
     protected CollectionLoader<MessageEntity> messagesDl;
@@ -60,6 +59,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
 
     protected Map<String, String> locales = new LinkedHashMap<>();
     protected Map<String, Component> fields = new HashMap<>();
+    protected boolean checkUnsavedChanges = true;
 
     @Subscribe
     public void onInit(InitEvent event) {
@@ -160,6 +160,19 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
                 break;
             }
         }
+    }
+
+    @Subscribe("saveAndCloseAction")
+    public void onSaveAndCloseAction(ActionPerformedEvent event) {
+        checkUnsavedChanges = false;
+        closeWithSave();
+    }
+
+    @Override
+    public boolean hasUnsavedChanges() {
+        if (!checkUnsavedChanges)
+            return false;
+        return super.hasUnsavedChanges();
     }
 
     protected <T extends Component> T createMessageEntityField(
