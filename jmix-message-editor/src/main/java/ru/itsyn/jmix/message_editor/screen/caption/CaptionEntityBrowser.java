@@ -2,6 +2,7 @@ package ru.itsyn.jmix.message_editor.screen.caption;
 
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.LoadContext;
 import io.jmix.core.MessageTools;
@@ -9,6 +10,8 @@ import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.action.list.EditAction;
+import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.sys.ViewSupport;
@@ -53,6 +56,10 @@ public class CaptionEntityBrowser extends StandardListView<CaptionEntity> {
     protected CollectionLoader<CaptionEntity> tableDl;
     @ViewComponent
     protected ComboBox<Object> entityFilterField;
+    @ViewComponent
+    private DataGrid<CaptionEntity> table;
+    @ViewComponent("table.edit")
+    protected EditAction<CaptionEntity> tableEditAction;
 
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
@@ -93,6 +100,12 @@ public class CaptionEntityBrowser extends StandardListView<CaptionEntity> {
         if (!event.isFromClient())
             return;
         tableDl.load();
+    }
+
+    @Subscribe("table")
+    protected void onTableItemDoubleClick(ItemDoubleClickEvent<CaptionEntity> event) {
+        table.select(event.getItem());
+        tableEditAction.actionPerform(table);
     }
 
     @Subscribe("table.apply")
