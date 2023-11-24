@@ -156,9 +156,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
             var isCurrent = isTrue(item.getActive()) &&
                     currentLocale.getLanguage().equals(item.getLocale());
             if (isCurrent) {
-                var entity = getEditedEntity();
-                dataContext.evict(entity);
-                entity.setText(item.getText());
+                getEditedEntity().setText(item.getText());
                 break;
             }
         }
