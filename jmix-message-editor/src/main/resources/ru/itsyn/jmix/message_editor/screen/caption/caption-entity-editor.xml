@@ -27,7 +27,7 @@
         </hbox>
         <label text="msg://captions" setFor="messagesTable"/>
         <dataGrid id="messagesTable" width="100%" height="400px" dataContainer="messagesDc"
-                  editorBuffered="false">
+                  selectionMode="NONE" editorBuffered="false">
             <columns>
                 <column property="locale"/>
                 <column property="text"/>

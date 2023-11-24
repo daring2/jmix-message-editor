@@ -50,6 +50,8 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
     protected UiComponents uiComponents;
 
     @ViewComponent
+    protected DataContext dataContext;
+    @ViewComponent
     protected CollectionContainer<MessageEntity> messagesDc;
     @ViewComponent
     protected CollectionLoader<MessageEntity> messagesDl;
@@ -143,7 +145,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
     }
 
     @Subscribe
-    protected void onAfterSave(final AfterSaveEvent event) {
+    protected void onAfterSave(AfterSaveEvent event) {
         messagesDl.load();
         updateCaptionEntityAfterCommit();
     }
@@ -154,18 +156,13 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
             var isCurrent = isTrue(item.getActive()) &&
                     currentLocale.getLanguage().equals(item.getLocale());
             if (isCurrent) {
-                getEditedEntity().setText(item.getText());
+                var entity = getEditedEntity();
+                dataContext.evict(entity);
+                entity.setText(item.getText());
                 break;
             }
         }
     }
-
-//    @Override
-//    protected void preventUnsavedChanges(BeforeCloseEvent event) {
-//        if (event.getCloseAction() == WINDOW_COMMIT_AND_CLOSE_ACTION)
-//            return;
-//        super.preventUnsavedChanges(event);
-//    }
 
     protected <T extends Component> T createMessageEntityField(
             Class<T> componentType,
