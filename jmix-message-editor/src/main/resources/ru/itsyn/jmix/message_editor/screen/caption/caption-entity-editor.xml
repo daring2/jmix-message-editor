@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://captionEntityEditor.caption"
-        focusComponent="form">
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://captionEntityEditor.caption"
+      focusComponent="form">
     <data>
         <instance id="editDc" class="ru.itsyn.jmix.message_editor.entity.CaptionEntity">
             <loader/>
@@ -13,40 +13,32 @@
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
-        <screenSettings id="settingsFacet" auto="true"/>
+        <settings id="settingsFacet" auto="true"/>
     </facets>
     <actions>
-        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
-                icon="EDITOR_OK"
-                primary="true"
-                shortcut="${COMMIT_SHORTCUT}"/>
-        <action id="windowCommit" caption="msg:///actions.Save"
-                icon="EDITOR_SAVE"/>
-        <action id="windowClose"
-                caption="msg:///actions.Close"
-                icon="EDITOR_CANCEL"/>
+        <action id="saveAndCloseAction" type="detail_saveClose"/>
+        <action id="saveAction" type="detail_save"/>
+        <action id="closeAction" type="detail_close" text="msg:///actions.Close"/>
     </actions>
-    <dialogMode height="768" width="1024"/>
     <layout expand="editActions" spacing="true">
-        <form id="form" dataContainer="editDc" width="100%">
-            <column width="100%">
-                <textField id="keyField" property="key"/>
-            </column>
-        </form>
-        <table id="messagesTable" dataContainer="messagesDc" editable="true"
-               height="300" width="100%" textSelectionEnabled="true"
-               caption="msg://captions">
+        <hbox spacing="true" width="100%" expand="keyField" alignItems="CENTER">
+            <label setFor="keyField" text="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.key"/>
+            <textField id="keyField" dataContainer="editDc" property="key"/>
+        </hbox>
+        <label text="msg://captions" setFor="messagesTable"/>
+        <dataGrid id="messagesTable" width="100%" height="400px" dataContainer="messagesDc"
+                  editorBuffered="false">
             <columns>
-                <column id="locale"/>
-                <column id="text" editable="true"/>
-                <column id="active" editable="true" width="100" align="CENTER"/>
-                <column id="defaultText" caption="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
+                <column property="locale"/>
+                <column property="text" editable="true"/>
+                <column property="active" editable="true" width="100" textAlign="CENTER"/>
+                <column key="defaultText" header="msg://ru.itsyn.jmix.message_editor.entity/MessageEntity.defaultText"/>
             </columns>
-        </table>
-        <hbox id="editActions" spacing="true">
-            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
-            <button id="windowCommit" action="windowCommit"/>
-            <button id="closeBtn" action="windowClose"/>
+        </dataGrid>
+        <hbox id="editActions" spacing="true" margin="true" alignSelf="CENTER">
+            <button id="saveAndCloseBtn" action="saveAndCloseAction"/>
+            <button id="saveBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
         </hbox>
     </layout>
-</window>
+</view>

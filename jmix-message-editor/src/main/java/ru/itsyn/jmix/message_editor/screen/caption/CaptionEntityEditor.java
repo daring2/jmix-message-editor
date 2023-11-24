@@ -1,13 +1,13 @@
 package ru.itsyn.jmix.message_editor.screen.caption;
 
+import com.vaadin.flow.data.renderer.Renderer;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.Route;
 import io.jmix.core.*;
-import io.jmix.ui.component.Component;
-import io.jmix.ui.component.Table;
-import io.jmix.ui.model.CollectionContainer;
-import io.jmix.ui.model.CollectionLoader;
-import io.jmix.ui.model.DataContext.PreCommitEvent;
-import io.jmix.ui.navigation.Route;
-import io.jmix.ui.screen.*;
+import io.jmix.flowui.model.CollectionContainer;
+import io.jmix.flowui.model.CollectionLoader;
+import io.jmix.flowui.model.DataContext;
+import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.CaptionEntity;
 import ru.itsyn.jmix.message_editor.entity.MessageEntity;
@@ -21,11 +21,12 @@ import java.util.Map;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@Route(path = "CaptionEntity/edit", parentPrefix = "CaptionEntity")
-@UiController("msg_CaptionEntity.edit")
-@UiDescriptor("caption-entity-editor.xml")
+@Route(value = "CaptionEntity/:id", layout = DefaultMainViewParent.class)
+@ViewController("msg_CaptionEntity.detail")
+@ViewDescriptor("caption-entity-editor.xml")
 @EditedEntityContainer("editDc")
-public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
+@DialogMode(width = "1024px", height = "768px", resizable = true)
+public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
 
     @Autowired
     protected Metadata metadata;
@@ -37,9 +38,10 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
     protected MessageTools messageTools;
     @Autowired
     protected MessageHelper messageHelper;
-    @Autowired
+
+    @ViewComponent
     protected CollectionContainer<MessageEntity> messagesDc;
-    @Autowired
+    @ViewComponent
     protected CollectionLoader<MessageEntity> messagesDl;
 
     protected Map<String, String> locales = new LinkedHashMap<>();
@@ -87,20 +89,18 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
                 .list();
     }
 
-    @Install(to = "messagesTable.locale", subject = "columnGenerator")
-    protected Component localeColumnGenerator(MessageEntity entity) {
-        var text = locales.get(entity.getLocale());
-        return new Table.PlainTextCell(text);
+    @Supply(to = "messagesTable.locale", subject = "renderer")
+    protected Renderer<MessageEntity> localeColumnRenderer() {
+        return new TextRenderer<>(entity -> locales.get(entity.getLocale()));
     }
 
-    @Install(to = "messagesTable.defaultText", subject = "columnGenerator")
-    protected Component defaultTextColumnGenerator(MessageEntity entity) {
-        var text = messageHelper.getDefaultText(entity);
-        return new Table.PlainTextCell(text);
+    @Supply(to = "messagesTable.locale", subject = "renderer")
+    protected Renderer<MessageEntity> localeDefaultTextRenderer() {
+        return new TextRenderer<>(messageHelper::getDefaultText);
     }
 
     @Subscribe(target = Target.DATA_CONTEXT)
-    protected void onPreCommit(PreCommitEvent event) {
+    protected void onPreSave(DataContext.PreSaveEvent event) {
         event.getModifiedInstances().remove(getEditedEntity());
         event.getModifiedInstances().forEach(obj -> {
             var entity = (MessageEntity) obj;
@@ -114,7 +114,7 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
     }
 
     @Subscribe
-    public void onAfterCommitChanges(AfterCommitChangesEvent event) {
+    protected void onAfterSave(final AfterSaveEvent event) {
         messagesDl.load();
         updateCaptionEntityAfterCommit();
     }
@@ -131,11 +131,11 @@ public class CaptionEntityEditor extends StandardEditor<CaptionEntity> {
         }
     }
 
-    @Override
-    protected void preventUnsavedChanges(BeforeCloseEvent event) {
-        if (event.getCloseAction() == WINDOW_COMMIT_AND_CLOSE_ACTION)
-            return;
-        super.preventUnsavedChanges(event);
-    }
+//    @Override
+//    protected void preventUnsavedChanges(BeforeCloseEvent event) {
+//        if (event.getCloseAction() == WINDOW_COMMIT_AND_CLOSE_ACTION)
+//            return;
+//        super.preventUnsavedChanges(event);
+//    }
 
 }
