@@ -64,6 +64,7 @@ public class CaptionEntityBrowser extends StandardListView<CaptionEntity> {
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
         initEntityFilterField();
+        initTableEditAction();
     }
 
     protected void initEntityFilterField() {
@@ -87,6 +88,10 @@ public class CaptionEntityBrowser extends StandardListView<CaptionEntity> {
                 .collect(Collectors.toList());
         entityFilterField.setItems(items);
         entityFilterField.setItemLabelGenerator(options::get);
+    }
+
+    protected void initTableEditAction() {
+        tableEditAction.setOpenMode(OpenMode.DIALOG);
     }
 
     @Install(to = "tableDl", target = Target.DATA_LOADER)
