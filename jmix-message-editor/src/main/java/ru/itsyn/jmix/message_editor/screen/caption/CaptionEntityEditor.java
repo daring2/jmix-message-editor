@@ -1,5 +1,6 @@
 package ru.itsyn.jmix.message_editor.screen.caption;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -9,8 +10,12 @@ import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.component.checkbox.JmixCheckbox;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.textfield.TypedTextField;
+import io.jmix.flowui.data.SupportsValueSource;
 import io.jmix.flowui.data.value.ContainerValueSource;
-import io.jmix.flowui.model.*;
+import io.jmix.flowui.model.CollectionContainer;
+import io.jmix.flowui.model.CollectionLoader;
+import io.jmix.flowui.model.DataComponents;
+import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.itsyn.jmix.message_editor.entity.CaptionEntity;
@@ -102,8 +107,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
     @Supply(to = "messagesTable.text", subject = "renderer")
     protected Renderer<MessageEntity> textColumnRenderer() {
         return new ComponentRenderer<>(entity -> {
-            TypedTextField<String> field = uiComponents.create(TypedTextField.class);
-            field.setValueSource(createValueSource(entity, "text"));
+            var field = createMessageEntityField(TypedTextField.class, entity, "text");
             field.setWidthFull();
             return field;
         });
@@ -112,9 +116,7 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
     @Supply(to = "messagesTable.active", subject = "renderer")
     protected Renderer<MessageEntity> activeColumnRenderer() {
         return new ComponentRenderer<>(entity -> {
-            var field = uiComponents.create(JmixCheckbox.class);
-            field.setValueSource(createValueSource(entity, "active"));
-            return field;
+            return createMessageEntityField(JmixCheckbox.class, entity, "active");
         });
     }
 
@@ -167,13 +169,17 @@ public class CaptionEntityEditor extends StandardDetailView<CaptionEntity> {
 //        super.preventUnsavedChanges(event);
 //    }
 
-    protected <T> ContainerValueSource<MessageEntity, T> createValueSource(
+    protected <T extends Component> T createMessageEntityField(
+            Class<T> componentType,
             MessageEntity entity,
             String property
     ) {
         var container = dataComponents.createInstanceContainer(MessageEntity.class);
         container.setItem(entity);
-        return new ContainerValueSource<>(container, property);
+        var valueSource = new ContainerValueSource<>(container, property);
+        var field = uiComponents.create(componentType);
+        ((SupportsValueSource<Object>) field).setValueSource(valueSource);
+        return field;
     }
 
 }
