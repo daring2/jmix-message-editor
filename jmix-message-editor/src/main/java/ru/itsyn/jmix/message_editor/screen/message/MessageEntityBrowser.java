@@ -1,6 +1,9 @@
 package ru.itsyn.jmix.message_editor.screen.message;
 
+import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.router.Route;
+import io.jmix.flowui.action.list.EditAction;
+import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,17 @@ public class MessageEntityBrowser extends StandardListView<MessageEntity> {
 
     @Autowired
     protected MessageHelper messageHelper;
+
+    @ViewComponent
+    private DataGrid<MessageEntity> table;
+    @ViewComponent("table.edit")
+    protected EditAction<MessageEntity> tableEditAction;
+
+    @Subscribe("table")
+    protected void onTableItemDoubleClick(ItemDoubleClickEvent<MessageEntity> event) {
+        table.select(event.getItem());
+        tableEditAction.actionPerform(table);
+    }
 
     @Subscribe("table.apply")
     public void onTableApply(ActionPerformedEvent event) {
